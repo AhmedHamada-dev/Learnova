@@ -19,6 +19,7 @@ namespace Learnova.Infrastructure.Repository
         public UserRepository(LearnovaDbContext dbContext)
         {
             _dbContext = dbContext;
+            int x = 5;
         }
         public async Task AddUserAsync(ApplicationUser user,string password)
         {
