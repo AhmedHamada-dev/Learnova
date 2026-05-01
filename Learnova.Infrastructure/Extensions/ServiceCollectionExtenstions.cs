@@ -1,4 +1,6 @@
-﻿using Learnova.Infrastructure.Persistence;
+﻿using Learnova.Application.Repositories;
+using Learnova.Infrastructure.Persistence;
+using Learnova.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,10 @@ namespace TadaWy.Infrastructure.Extensions
                 obtions.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddHttpClient();
+            services.AddScoped<IUserRepository, UserRepository>();
+            
         }
+
+        
     }
 }

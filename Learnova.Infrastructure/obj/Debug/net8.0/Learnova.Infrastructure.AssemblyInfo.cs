@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Learnova.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7d0a84a6855106b49cca98ce5dc32b72dc174531")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+43a495efc912b579e7ec882292f5c687163fa27c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Learnova.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Learnova.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

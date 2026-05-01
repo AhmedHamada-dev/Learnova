@@ -1,41 +1,46 @@
 ﻿using Learnova.Application.IRepository;
 using Learnova.Domain.Identity;
-using Learnova.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Learnova.Infrastructure.Repository
+namespace Learnova.Infrastructure.Repositories;
+
+public class UserRepository : IUserRepository
 {
-    public class UserRepository 
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public UserRepository(UserManager<ApplicationUser> userManager)
     {
-        private readonly LearnovaDbContext _dbContext;
-        private readonly UserManager<ApplicationUser> _userManager;
+        _userManager = userManager;
+    }
 
-        public UserRepository(LearnovaDbContext dbContext)
-        {
-            _dbContext = dbContext;
-            int x = 5;
-        }
-        public async Task AddUserAsync(ApplicationUser user,string password)
-        {
-            var result = await _userManager.CreateAsync(user, password);
-          
-        }
+    public async Task<ApplicationUser?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        return await _userManager.Users
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+    }
 
-        public async Task<bool> ExistsByEmail(string Email)
-        {
-            return await _dbContext.Users.AnyAsync(u=>u.Email == Email);
-            
-        }
+    public async Task<ApplicationUser?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        var normalizedEmail = _userManager.NormalizeEmail(email);
+        return await _userManager.Users
+            .FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail, cancellationToken);
+    }
 
-        public async Task<ApplicationUser?> GetByEmail(string Email)
+    public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        var user = await GetByEmailAsync(email, cancellationToken);
+        return user is not null;
+    }
+
+    public async Task AddAsync(ApplicationUser user, string password, CancellationToken cancellationToken = default)
+    {
+        var result = await _userManager.CreateAsync(user, password);
+        if (!result.Succeeded)
         {
-           return await _dbContext.Users.FirstOrDefaultAsync(u=>u.Email == Email);
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            throw new InvalidOperationException($"Failed to create user: {errors}");
         }
     }
+
 }

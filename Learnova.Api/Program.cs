@@ -1,16 +1,15 @@
 using Learnova.Application.Settings;
 using Learnova.Domain.Identity;
 using Learnova.Infrastructure.Persistence;
+using Learnova.Infrastructure.Seeders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TadaWy.Infrastructure.Seeders;
 
-namespace Learnova.Api
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+
+ 
+      
+             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
 
@@ -26,7 +25,14 @@ namespace Learnova.Api
 
            
             var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
 
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                await RoleSeeder.SeedRolesAsync(roleManager);
+                await AdminSeeder.SeedAdminAsync(userManager);
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -42,6 +48,5 @@ namespace Learnova.Api
             app.MapControllers();
 
             app.Run();
-        }
-    }
-}
+     
+

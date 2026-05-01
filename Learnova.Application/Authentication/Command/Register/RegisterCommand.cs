@@ -1,4 +1,5 @@
 ﻿using Learnova.Application.DTOS.RegisterDto;
+using Learnova.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;

@@ -23,5 +23,7 @@ namespace Learnova.Domain.Identity
 
         public ICollection<Exam> CreatedExams { get; set; } // للـ Instructor
         public ICollection<StudentExam> TakenExams { get; set; } // للـ Student
+
+        public ICollection<RefreshToken> RefreshTokens { get; set; }
     }
 }
