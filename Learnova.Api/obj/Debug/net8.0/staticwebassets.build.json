@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "n3zFpTPM6ztKCVNNeZ+aXOi9J4WQifO73ChN5k9mfUs=",
+  "Source": "Learnova.Api",
+  "BasePath": "_content/Learnova.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

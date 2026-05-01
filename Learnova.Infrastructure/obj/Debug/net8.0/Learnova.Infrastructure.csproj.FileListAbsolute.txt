@@ -1,0 +1,17 @@
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.csproj.AssemblyReference.cache
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.AssemblyInfoInputs.cache
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.AssemblyInfo.cs
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.csproj.CoreCompileInputs.cache
+D:\Learnova\Learnova.Infrastructure\bin\Debug\net8.0\Learnova.Infrastructure.deps.json
+D:\Learnova\Learnova.Infrastructure\bin\Debug\net8.0\Learnova.Infrastructure.runtimeconfig.json
+D:\Learnova\Learnova.Infrastructure\bin\Debug\net8.0\Learnova.Infrastructure.dll
+D:\Learnova\Learnova.Infrastructure\bin\Debug\net8.0\Learnova.Infrastructure.pdb
+D:\Learnova\Learnova.Infrastructure\bin\Debug\net8.0\Learnova.Domain.dll
+D:\Learnova\Learnova.Infrastructure\bin\Debug\net8.0\Learnova.Domain.pdb
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.F29010D3.Up2Date
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.dll
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\refint\Learnova.Infrastructure.dll
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.pdb
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.genruntimeconfig.cache
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\ref\Learnova.Infrastructure.dll

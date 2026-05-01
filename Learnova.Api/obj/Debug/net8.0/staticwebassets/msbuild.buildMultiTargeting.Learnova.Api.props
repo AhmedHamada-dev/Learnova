@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Learnova.Api.props" />
+</Project>

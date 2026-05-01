@@ -1,0 +1,14 @@
+D:\Learnova\Learnova.Domain\bin\Debug\net8.0\Learnova.Domain.deps.json
+D:\Learnova\Learnova.Domain\bin\Debug\net8.0\Learnova.Domain.runtimeconfig.json
+D:\Learnova\Learnova.Domain\bin\Debug\net8.0\Learnova.Domain.dll
+D:\Learnova\Learnova.Domain\bin\Debug\net8.0\Learnova.Domain.pdb
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.csproj.AssemblyReference.cache
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.AssemblyInfoInputs.cache
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.AssemblyInfo.cs
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.csproj.CoreCompileInputs.cache
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.dll
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\refint\Learnova.Domain.dll
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.pdb
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.genruntimeconfig.cache
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\ref\Learnova.Domain.dll
