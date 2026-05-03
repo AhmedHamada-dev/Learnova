@@ -10,6 +10,7 @@ namespace Learnova.Domain.Enums
     {
         Admin,
         Instructor,
-        Student
+        Student,
+        StudentParent
     }
 }

@@ -17,6 +17,8 @@ namespace Learnova.Domain.Entities
         public decimal Price { get; set; }
         public bool IsFree { get; set; }
 
+
+
         public string ThumbnailUrl { get; set; }
         public string InstructorId { get; set; }
         public ApplicationUser Instructor { get; set; }

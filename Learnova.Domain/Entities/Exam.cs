@@ -16,7 +16,8 @@ namespace Learnova.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public int CourseId { get; set; }
         public Course Course { get; set; }
-
+        public DateTime StartAt { get; set; }
+        public DateTime EndAt { get; set; }
         public string InstructorId { get; set; }
         public ApplicationUser Instructor { get; set; }
 

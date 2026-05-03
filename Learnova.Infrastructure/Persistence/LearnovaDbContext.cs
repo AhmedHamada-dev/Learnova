@@ -29,6 +29,7 @@ namespace Learnova.Infrastructure.Persistence
         public DbSet<Option> Options => Set<Option>();
         public DbSet<Question> Questions => Set<Question>();
         public DbSet<StudentExam> StudentExams => Set<StudentExam>();
+        public DbSet<StudentParent> StudentParents => Set<StudentParent>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
