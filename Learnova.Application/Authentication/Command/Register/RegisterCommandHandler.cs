@@ -18,7 +18,7 @@ namespace Learnova.Application.Authentication.Command.Register
      
         private readonly IAuthService _authService;
        
-        public RegisterCommandHandler(IUserRepository userRepository, IAuthRepository authRepository,UserManager<ApplicationUser> userManager,IAuthService authService)
+        public RegisterCommandHandler(IAuthService authService)
         {
             _authService = authService;
         }

@@ -1,4 +1,5 @@
-﻿using Learnova.Application.IRepository;
+﻿using Azure.Core;
+using Learnova.Application.IRepository;
 using Learnova.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -50,5 +51,10 @@ public class UserRepository : IUserRepository
     public async Task UpdateAsync(ApplicationUser user, CancellationToken cancellationToken = default)
     {
          await _userManager.UpdateAsync(user);
+    }
+
+    public async Task<bool> CheckPasswordAsync(ApplicationUser user,string Password)
+    {
+        return await _userManager.CheckPasswordAsync(user, Password);
     }
 }

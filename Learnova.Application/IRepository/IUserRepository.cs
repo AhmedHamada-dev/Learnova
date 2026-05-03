@@ -15,5 +15,6 @@ public interface IUserRepository
     Task AddAsync(ApplicationUser user, string password, CancellationToken cancellationToken = default);
     Task UpdateAsync(ApplicationUser user, CancellationToken cancellationToken= default);
 
+    Task<bool> CheckPasswordAsync(ApplicationUser user, string Password);
     Task<ApplicationUser?> GetByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
 }

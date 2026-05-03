@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Learnova.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+903b23d21ef52f15142cb716f135a9be9959f53d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb439ae8126b59854e7ac3b6a8155e3293652c51")]
 [assembly: System.Reflection.AssemblyProductAttribute("Learnova.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Learnova.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

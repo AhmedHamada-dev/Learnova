@@ -1,4 +1,5 @@
-﻿using Learnova.Application.Authentication.Command.Register;
+﻿using Learnova.Application.Authentication.Command.Login;
+using Learnova.Application.Authentication.Command.Register;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,16 @@ namespace Learnova.Api.Controllers
             return Ok(new { token = result.Token, expireOn = result.ExpireOn, Role = result.Role });
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(command, cancellationToken);
+
+            if (!result.IsAuthenticated)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
 
         private void SetRefreshTokenInCookie(string RefreshToken, DateTime Expires)
         {

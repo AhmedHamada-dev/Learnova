@@ -1,4 +1,5 @@
-﻿using Learnova.Application.Authentication.Command.Register;
+﻿using Learnova.Application.Authentication.Command.Login;
+using Learnova.Application.Authentication.Command.Register;
 using Learnova.Application.DTOS.RegisterDto;
 using Learnova.Application.IRepository;
 using Learnova.Application.IServices;
@@ -149,6 +150,55 @@ namespace Learnova.Application.Services
                 ExpireOn = DateTime.UtcNow.AddDays(_Jwt.DurationInDays)
 
             };
+        }
+
+        public async Task<AuthModel> Login(LoginCommand request, CancellationToken cancellationToken)
+        {
+
+            var authModel = new AuthModel();
+            var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
+            if (user is null)
+            {
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "No account registered with this email";
+                return authModel;
+            }
+
+            var passwordValid = await _userRepository.CheckPasswordAsync(user, request.Password);
+            if (!passwordValid)
+            {
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Invalid email or password";
+                return authModel;
+            }
+
+           
+            if (!user.IsVerified)
+            {
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Account is not verified yet";
+                return authModel;
+            }
+
+            var stringToken = await CreateJwtTokenAsync(user);
+
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshTokens.Add(refreshToken);
+            await _userRepository.UpdateAsync(user, cancellationToken);
+
+            var roles = await _authRepository.GetRolesAsync(user);
+
+            authModel.IsAuthenticated = true;
+            authModel.Email = user.Email!;
+            authModel.Username = user.Email;
+            authModel.Role = roles.ToList();
+            authModel.Token = stringToken;
+            authModel.RefreshToken = refreshToken.Token;
+            authModel.RefreshTokenExpireOn = refreshToken.ExpireOn;
+            authModel.ExpireOn = DateTime.UtcNow.AddDays(_Jwt.DurationInDays);
+            authModel.Messege = "Login completed successfully";
+
+            return authModel;
         }
         public async Task<bool> RevokeTokenAsync(string token)
         {
