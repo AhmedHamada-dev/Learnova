@@ -1,23 +1,18 @@
 [
   {
-    "ContainingType": "Learnova.Api.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
-    "HttpMethod": "GET",
+    "ContainingType": "Learnova.Api.Controllers.AuthController",
+    "Method": "StudentRegister",
+    "RelativePath": "api/Auth/register",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
+    "Parameters": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[Learnova.Api.WeatherForecast, Learnova.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
+        "Name": "command",
+        "Type": "Learnova.Application.Authentication.Command.Register.RegisterCommand",
+        "IsRequired": true
       }
     ],
-    "EndpointName": "GetWeatherForecast"
+    "ReturnTypes": []
   }
 ]

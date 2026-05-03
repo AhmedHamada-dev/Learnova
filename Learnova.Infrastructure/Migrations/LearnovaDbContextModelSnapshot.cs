@@ -788,6 +788,43 @@ namespace Learnova.Infrastructure.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("Learnova.Domain.Identity.ApplicationUser", b =>
+                {
+                    b.OwnsMany("Learnova.Domain.Identity.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<string>("ApplicationUserId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<DateTime>("CreatedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime>("ExpireOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime?>("RevokedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Token")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("ApplicationUserId", "Id");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApplicationUserId");
+                        });
+
+                    b.Navigation("RefreshTokens");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)

@@ -8,12 +8,11 @@ D:\Learnova\Learnova.Application\bin\Debug\net8.0\Learnova.Application.runtimeco
 D:\Learnova\Learnova.Application\bin\Debug\net8.0\Learnova.Application.dll
 D:\Learnova\Learnova.Application\bin\Debug\net8.0\Learnova.Application.pdb
 D:\Learnova\Learnova.Application\bin\Debug\net8.0\Learnova.Domain.dll
-D:\Learnova\Learnova.Application\bin\Debug\net8.0\Learnova.Infrastructure.dll
 D:\Learnova\Learnova.Application\bin\Debug\net8.0\Learnova.Domain.pdb
-D:\Learnova\Learnova.Application\bin\Debug\net8.0\Learnova.Infrastructure.pdb
 D:\Learnova\Learnova.Application\obj\Debug\net8.0\Learnova.B9C37714.Up2Date
 D:\Learnova\Learnova.Application\obj\Debug\net8.0\Learnova.Application.dll
 D:\Learnova\Learnova.Application\obj\Debug\net8.0\refint\Learnova.Application.dll
 D:\Learnova\Learnova.Application\obj\Debug\net8.0\Learnova.Application.pdb
 D:\Learnova\Learnova.Application\obj\Debug\net8.0\Learnova.Application.genruntimeconfig.cache
 D:\Learnova\Learnova.Application\obj\Debug\net8.0\ref\Learnova.Application.dll
+D:\Learnova\Learnova.Application\obj\Debug\net8.0\Learnova.Application.sourcelink.json

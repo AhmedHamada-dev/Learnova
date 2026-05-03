@@ -15,3 +15,6 @@ D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\refint\Learnova.Infrastruct
 D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.pdb
 D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.genruntimeconfig.cache
 D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\ref\Learnova.Infrastructure.dll
+D:\Learnova\Learnova.Infrastructure\obj\Debug\net8.0\Learnova.Infrastructure.sourcelink.json
+D:\Learnova\Learnova.Infrastructure\bin\Debug\net8.0\Learnova.Application.dll
+D:\Learnova\Learnova.Infrastructure\bin\Debug\net8.0\Learnova.Application.pdb

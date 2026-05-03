@@ -42,5 +42,13 @@ public class UserRepository : IUserRepository
             throw new InvalidOperationException($"Failed to create user: {errors}");
         }
     }
+    public async Task<ApplicationUser?> GetByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+    {
+        return await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
+    }
 
+    public async Task UpdateAsync(ApplicationUser user, CancellationToken cancellationToken = default)
+    {
+         await _userManager.UpdateAsync(user);
+    }
 }

@@ -146,3 +146,10 @@ D:\Learnova\Learnova.Api\obj\Debug\net8.0\refint\Learnova.Api.dll
 D:\Learnova\Learnova.Api\obj\Debug\net8.0\Learnova.Api.pdb
 D:\Learnova\Learnova.Api\obj\Debug\net8.0\Learnova.Api.genruntimeconfig.cache
 D:\Learnova\Learnova.Api\obj\Debug\net8.0\ref\Learnova.Api.dll
+D:\Learnova\Learnova.Api\obj\Debug\net8.0\Learnova.Api.sourcelink.json
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\MediatR.dll
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\MediatR.Contracts.dll
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.Google.dll
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll

@@ -12,3 +12,4 @@ D:\Learnova\Learnova.Domain\obj\Debug\net8.0\refint\Learnova.Domain.dll
 D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.pdb
 D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.genruntimeconfig.cache
 D:\Learnova\Learnova.Domain\obj\Debug\net8.0\ref\Learnova.Domain.dll
+D:\Learnova\Learnova.Domain\obj\Debug\net8.0\Learnova.Domain.sourcelink.json

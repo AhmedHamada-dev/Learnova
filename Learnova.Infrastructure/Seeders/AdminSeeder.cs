@@ -1,4 +1,5 @@
-﻿using Learnova.Domain.Identity;
+﻿using Learnova.Domain.Enums;
+using Learnova.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,12 @@ namespace Learnova.Infrastructure.Seeders
             adminUser = new ApplicationUser
             {
                 UserName = adminEmail,
+                FullName = "System Administrator",
                 Email = adminEmail,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                IsVerified = true,
+                Role=UserRole.Admin
+
             };
             var result = await userManager.CreateAsync(adminUser, adminPassword);
 

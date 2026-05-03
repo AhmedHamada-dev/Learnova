@@ -17,7 +17,7 @@ namespace Learnova.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterCommand command)
+        public async Task<IActionResult> StudentRegister([FromBody] RegisterCommand command)
         {
 
             if (!ModelState.IsValid)

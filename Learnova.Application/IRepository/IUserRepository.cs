@@ -13,4 +13,7 @@ public interface IUserRepository
     Task<ApplicationUser?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
     Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default);
     Task AddAsync(ApplicationUser user, string password, CancellationToken cancellationToken = default);
+    Task UpdateAsync(ApplicationUser user, CancellationToken cancellationToken= default);
+
+    Task<ApplicationUser?> GetByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
 }
