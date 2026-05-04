@@ -1,4 +1,7 @@
-﻿using Learnova.Application.IServices;
+﻿using Learnova.Application.Command.Authentication.Login;
+using Learnova.Application.DTOS.RegisterDto;
+using Learnova.Application.IServices;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Learnova.Application.Command.Authentication.ResetPassword
 {
-    public class ResetPasswordCommandHandler
+    public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, bool>
     {
         private readonly IAuthService _authService;
 

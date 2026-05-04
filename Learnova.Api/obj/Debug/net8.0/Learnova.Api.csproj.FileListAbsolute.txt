@@ -153,3 +153,7 @@ D:\Learnova\Learnova.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.Go
 D:\Learnova\Learnova.Api\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 D:\Learnova\Learnova.Api\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
 D:\Learnova\Learnova.Api\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\StackExchange.Redis.dll
+D:\Learnova\Learnova.Api\bin\Debug\net8.0\System.IO.Hashing.dll

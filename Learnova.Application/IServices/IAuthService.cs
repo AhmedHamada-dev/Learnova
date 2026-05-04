@@ -2,6 +2,7 @@
 using Learnova.Application.Command.Authentication.Login;
 using Learnova.Application.Command.Authentication.Register;
 using Learnova.Application.Command.Authentication.ResetPassword;
+using Learnova.Application.Command.Authentication.VerifyEmail;
 using Learnova.Application.DTOS.RegisterDto;
 using Learnova.Domain.Identity;
 using System;
@@ -22,8 +23,9 @@ namespace Learnova.Application.IServices
         Task<bool> RevokeTokenAsync(string token);
 
         Task<bool> ResetPasswordAsync(ResetPasswordCommand resetPasswordCommand);
-        Task ForgetPasswordAsync(ForgetPasswordCommand command);
+        Task ForgetPasswordAsync(ForgetPasswordCommand command,CancellationToken cancellationToken);
 
+        Task<AuthModel> VerifyEmailAsync(VerifyEmailCommand request, CancellationToken cancellationToken);
        // Task ForgetPasswordAsync(string Email);
 
         // Task<bool> ResetPasswordAsync(ResetPasswordDTO dto);

@@ -57,4 +57,7 @@ public class UserRepository : IUserRepository
     {
         return await _userManager.CheckPasswordAsync(user, Password);
     }
+
+   
+
 }

@@ -3,6 +3,7 @@ using Learnova.Application.DTOS.RegisterDto;
 using Learnova.Application.IRepository;
 using Learnova.Application.IServices;
 using Learnova.Domain.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Learnova.Application.Command.Authentication.Login
 {
-    public class LoginCommandHandler
+    public class LoginCommandHandler:IRequestHandler<LoginCommand,AuthModel>
     {
         private readonly IAuthService _authService;
 

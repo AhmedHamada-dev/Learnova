@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "Learnova.Api.Controllers.AuthController",
+    "Method": "ForgetPassword",
+    "RelativePath": "api/Auth/forget-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "Learnova.Application.Command.Authentication.ForgetPassword.ForgetPasswordCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Learnova.Api.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
     "HttpMethod": "POST",
@@ -9,7 +25,7 @@
     "Parameters": [
       {
         "Name": "command",
-        "Type": "Learnova.Application.Authentication.Command.Login.LoginCommand",
+        "Type": "Learnova.Application.Command.Authentication.Login.LoginCommand",
         "IsRequired": true
       }
     ],
@@ -25,7 +41,39 @@
     "Parameters": [
       {
         "Name": "command",
-        "Type": "Learnova.Application.Authentication.Command.Register.RegisterCommand",
+        "Type": "Learnova.Application.Command.Authentication.Register.RegisterCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Learnova.Api.Controllers.AuthController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/Auth/reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "Learnova.Application.Command.Authentication.ResetPassword.ResetPasswordCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Learnova.Api.Controllers.AuthController",
+    "Method": "VerifyEmail",
+    "RelativePath": "api/Auth/verify-email",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "Learnova.Application.Command.Authentication.VerifyEmail.VerifyEmailCommand",
         "IsRequired": true
       }
     ],

@@ -18,4 +18,6 @@ public interface IAuthRepository
 
     Task<bool> ResetPasswordAsync(ApplicationUser user, string decodedToken, string NewPassword);
 
+    Task CancelTokenAsync(CancellationToken cancellationToken);
+
 }

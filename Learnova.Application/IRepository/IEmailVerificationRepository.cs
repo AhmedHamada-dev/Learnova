@@ -11,5 +11,7 @@ namespace Learnova.Application.IRepository
     public interface IEmailVerificationRepository
     {
         Task AddEmailVerificationToUserAsync(EmailVerification verification, CancellationToken cancellationToken);
+
+        Task<EmailVerification?> GetEmailVerfication(ApplicationUser user, string Code, CancellationToken cancellationToken);
     }
 }

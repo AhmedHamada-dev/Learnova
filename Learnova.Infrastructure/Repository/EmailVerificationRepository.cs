@@ -1,4 +1,6 @@
-﻿using Learnova.Domain.Entities;
+﻿using Azure.Core;
+using Learnova.Application.IRepository;
+using Learnova.Domain.Entities;
 using Learnova.Domain.Identity;
 using Learnova.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Learnova.Infrastructure.Repository
 {
-    public class EmailVerificationRepository
+    public class EmailVerificationRepository:IEmailVerificationRepository
     {
         private readonly LearnovaDbContext _context;
 
@@ -24,6 +26,14 @@ namespace Learnova.Infrastructure.Repository
         {
             _context.EmailVerifications.Add(verification);
             await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<EmailVerification?> GetEmailVerfication(ApplicationUser user,string Code,CancellationToken cancellationToken)
+        {
+            return await _context.EmailVerifications
+                .Where(v => v.UserId == user.Id && v.Code == Code)
+                .OrderByDescending(v => v.ExpireAt)
+                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

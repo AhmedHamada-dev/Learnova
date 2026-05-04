@@ -4,6 +4,7 @@ using Learnova.Application.IRepository;
 using Learnova.Application.Settings;
 using Learnova.Domain.Enums;
 using Learnova.Domain.Identity;
+using Learnova.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -20,13 +21,16 @@ public class AuthRepository : IAuthRepository
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly JwtSettings _jwt;
+    private readonly LearnovaDbContext _context;
 
     public AuthRepository(
         UserManager<ApplicationUser> userManager,
-        IOptions<JwtSettings> jwtOptions)
+        IOptions<JwtSettings> jwtOptions,
+        LearnovaDbContext context)  
     {
         _userManager = userManager;
         _jwt = jwtOptions.Value;
+        _context = context;
     }
     public async Task<IList<Claim>> GetClaimsAsync(ApplicationUser user)
     {
@@ -55,5 +59,10 @@ public class AuthRepository : IAuthRepository
                 NewPassword
             );
         return result.Succeeded;
+    }
+
+    public async Task CancelTokenAsync(CancellationToken cancellationToken)
+    {
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

@@ -2,6 +2,7 @@
 using Learnova.Application.Command.Authentication.Login;
 using Learnova.Application.Command.Authentication.Register;
 using Learnova.Application.Command.Authentication.ResetPassword;
+using Learnova.Application.Command.Authentication.VerifyEmail;
 using Learnova.Application.DTOS.RegisterDto;
 using Learnova.Application.IRepository;
 using Learnova.Application.IServices;
@@ -159,32 +160,64 @@ namespace Learnova.Application.Services
                 Email = user.Email,
                 Messege = "Registration successful. Please verify your email using the code sent to you."
             };
-
-            //var stringToken = await CreateJwtTokenAsync(user);
-
-
-            //var refreshToken = GenerateRefreshToken();
-            //user.RefreshTokens.Add(refreshToken);
-            //await _userRepository.UpdateAsync(user, cancellationToken);
-
-
-            //var roles = await _authRepository.GetRolesAsync(user);
-
-            //return new AuthModel
-            //{
-            //    IsAuthenticated = true,
-            //    Email = user.Email,
-            //    Messege = "User registered successfully",
-            //    Username = user.Email,
-            //    Role = roles.ToList(),
-            //    Token = stringToken,
-            //    RefreshToken = refreshToken.Token,
-            //    RefreshTokenExpireOn = refreshToken.ExpireOn,
-            //    ExpireOn = DateTime.UtcNow.AddDays(_Jwt.DurationInDays)
-
-            //};
         }
 
+        public async Task<AuthModel> VerifyEmailAsync(VerifyEmailCommand request, CancellationToken cancellationToken)
+        {
+            var authModel = new AuthModel();
+
+            var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
+            if (user is null)
+            {
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Invalid email";
+                return authModel;
+            }
+
+
+            var verification =await _emailVerificationRepository.GetEmailVerfication(user, request.Code, cancellationToken);
+
+            if (verification is null)
+            {
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Invalid verification code";
+                return authModel;
+            }
+
+            if (verification.IsUsed || verification.ExpireAt < DateTime.UtcNow)
+            {
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Verification code has expired or already used";
+                return authModel;
+            }
+
+          
+            verification.IsUsed = true;
+            user.IsVerified = true;
+
+            await _authRepository.CancelTokenAsync(cancellationToken);
+            await _userRepository.UpdateAsync(user, cancellationToken);
+
+           
+            var token = await CreateJwtTokenAsync(user);
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshTokens.Add(refreshToken);
+            await _userRepository.UpdateAsync(user, cancellationToken);
+
+            var roles = await _authRepository.GetRolesAsync(user);
+
+            authModel.IsAuthenticated = true;
+            authModel.Email = user.Email!;
+            authModel.Username = user.Email;
+            authModel.Role = roles.ToList();
+            authModel.Token = token;
+            authModel.RefreshToken = refreshToken.Token;
+            authModel.RefreshTokenExpireOn = refreshToken.ExpireOn;
+            authModel.ExpireOn = DateTime.UtcNow.AddDays(_Jwt.DurationInDays);
+            authModel.Messege = "Email verified successfully";
+
+            return authModel;
+        }
         public async Task<AuthModel> Login(LoginCommand request, CancellationToken cancellationToken)
         {
 
@@ -269,21 +302,24 @@ namespace Learnova.Application.Services
             };
         }
 
-        public async Task ForgetPasswordAsync(ForgetPasswordCommand command)
+        public async Task ForgetPasswordAsync(ForgetPasswordCommand command, CancellationToken cancellationToken)
         {
-            var User = await _userRepository.GetByEmailAsync(command.Email);
-            if (User == null)
+            var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
+            if (user is null)
+                return; 
+
+            if (!user.IsVerified)
                 return;
 
-            if (User.IsVerified == false)
-                return;
-
-            var token = await _authRepository.GeneratePasswordResetTokenAsync(User);
+            var token = await _authRepository.GeneratePasswordResetTokenAsync(user);
             var encodedToken = WebUtility.UrlEncode(token);
 
             var resetLink = $"http://localhost:5173/reset-password?email={command.Email}&token={encodedToken}";
 
-           // BackgroundJob.Enqueue<IEmailService>(x => x.SendEmail(result.Email, "ResetPassword", $"Reset your password from here: {resetLink}"));
+            await _emailService.SendEmail(
+                user.Email!,
+                "Reset Password",
+                $"Reset your password from here: <a href=\"{resetLink}\">Reset Password</a>");
         }
 
         public async Task<bool> ResetPasswordAsync(ResetPasswordCommand resetPasswordCommand)

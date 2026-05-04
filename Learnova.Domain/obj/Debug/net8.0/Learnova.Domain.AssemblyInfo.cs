@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Learnova.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1daca74b6e27bb6a1fe9a3b6bcbac79fde69c2bf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+21e4846c71aaef42efc0f3edeb9b7e0b0a1a92e1")]
 [assembly: System.Reflection.AssemblyProductAttribute("Learnova.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Learnova.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

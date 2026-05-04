@@ -1,8 +1,10 @@
-﻿using Learnova.Application.IServices;
+﻿using Learnova.Application.DTOS;
+using Learnova.Application.IServices;
+using MediatR;
 
 namespace Learnova.Application.Command.Authentication.ForgetPassword
 {
-    public class ForgetPasswordCommandHandler
+    public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordCommand,ForgetPasswordResult>
     {
         private readonly IAuthService _authService;
 
@@ -11,9 +13,11 @@ namespace Learnova.Application.Command.Authentication.ForgetPassword
             _authService = authService;
         }
 
-        public async Task Handle(ForgetPasswordCommand command, CancellationToken cancellationToken)
+        public async Task<ForgetPasswordResult> Handle(ForgetPasswordCommand command, CancellationToken cancellationToken)
         {
-             await _authService.ForgetPasswordAsync(command);
+            await _authService.ForgetPasswordAsync(command, cancellationToken);
+            return  new ForgetPasswordResult { Message = "If this email is registered, a reset link has been sent." };
         }
     }
+    
 }
