@@ -5,6 +5,9 @@ using Learnova.Application.Command.Authentication.ForgetPassword;
 using Learnova.Application.Command.Authentication.ResetPassword;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
+using Learnova.Application.Command.Authentication.RefreshToken;
+using Learnova.Application.Command.Authentication.RevokeToken;
 
 namespace Learnova.Api.Controllers
 {
@@ -71,7 +74,7 @@ namespace Learnova.Api.Controllers
             return Ok(result);
         }
 
-        // POST: api/auth/reset-password
+       
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword( [FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
         {
@@ -80,10 +83,45 @@ namespace Learnova.Api.Controllers
             if (!result) 
                 return BadRequest(result);
 
+            return Ok("Password Reset Successfully");
+        }
+
+        [HttpGet("refresh-token")]
+        public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+                return BadRequest("Refresh token is missing.");
+
+            var command = new RefreshTokenCommand { refreshtoken = refreshToken };
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            if (!result.IsAuthenticated)
+                return BadRequest(result);
+
+            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpireOn);
+
             return Ok(result);
         }
 
-      
+        [HttpPost("RevokeToken")]
+        public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenCommand command,CancellationToken cancellationToken)
+        {
+            var token = command.Token ?? Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(token))
+                return BadRequest("Token is requred!");
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            if (!result)
+                return BadRequest("Token is invalid!");
+
+            return Ok();
+        }
+
         private void SetRefreshTokenInCookie(string refreshToken, DateTime expires)
         {
             var cookieOption = new CookieOptions

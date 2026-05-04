@@ -1,7 +1,9 @@
 ﻿using Learnova.Application.Command.Authentication.ForgetPassword;
 using Learnova.Application.Command.Authentication.Login;
+using Learnova.Application.Command.Authentication.RefreshToken;
 using Learnova.Application.Command.Authentication.Register;
 using Learnova.Application.Command.Authentication.ResetPassword;
+using Learnova.Application.Command.Authentication.RevokeToken;
 using Learnova.Application.Command.Authentication.VerifyEmail;
 using Learnova.Application.DTOS.RegisterDto;
 using Learnova.Application.IRepository;
@@ -42,43 +44,42 @@ namespace Learnova.Application.Services
         }
         public async Task<string> CreateJwtTokenAsync(ApplicationUser applicationUser)
         {
-            var UserClaims = await _authRepository.GetClaimsAsync(applicationUser);
-            var Roles = await _authRepository.GetRolesAsync(applicationUser);
+            var userClaims = await _authRepository.GetClaimsAsync(applicationUser);
+            var roles = await _authRepository.GetRolesAsync(applicationUser);
             var roleClaims = new List<Claim>();
 
-            foreach (var role in Roles)
+            foreach (var role in roles)
             {
                 roleClaims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var Claims = new[]
-            {
-            new Claim(JwtRegisteredClaimNames.Email,applicationUser.Email),
-            new Claim(ClaimTypes.NameIdentifier,applicationUser.Id),
-            }
-            .Union(roleClaims)
-            .Union(UserClaims);
+            var claims = new List<Claim>
+           {
+            new Claim(JwtRegisteredClaimNames.Email, applicationUser.Email),
+            new Claim(ClaimTypes.NameIdentifier, applicationUser.Id),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), 
+            new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString())
+            };
+
+            claims.AddRange(roleClaims);
+            claims.AddRange(userClaims);
 
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_Jwt.Key));
-            var singcre = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var JWTToken = new JwtSecurityToken
-            (
+            var jwtToken = new JwtSecurityToken(
                 issuer: _Jwt.Issuer,
                 audience: _Jwt.Audience,
-                claims: Claims,
-               expires: DateTime.UtcNow.AddDays(_Jwt.DurationInDays),
-                signingCredentials: singcre);
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(_Jwt.DurationInDays),
+                signingCredentials: creds);
 
-            var stringToken = new JwtSecurityTokenHandler().WriteToken(JWTToken);
-
-            return stringToken;
-
+            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
-        public async Task<AuthModel> RefreshTokenAsync(string refreshtoken)
+        public async Task<AuthModel> RefreshTokenAsync(RefreshTokenCommand command)
         {
             var authModel = new AuthModel();
-            var user = await _userRepository.GetByRefreshTokenAsync(refreshtoken);
+            var user = await _userRepository.GetByRefreshTokenAsync(command.refreshtoken);
 
             if (user == null)
             {
@@ -86,7 +87,7 @@ namespace Learnova.Application.Services
                 authModel.Messege = "Invalid Token";
                 return authModel;
             }
-            var refreshToken = user.RefreshTokens.Single(t => t.Token == refreshtoken);
+            var refreshToken = user.RefreshTokens.Single(t => t.Token == command.refreshtoken);
 
             if (!refreshToken.IsActive)
             {
@@ -266,16 +267,16 @@ namespace Learnova.Application.Services
 
             return authModel;
         }
-        public async Task<bool> RevokeTokenAsync(string token)
+        public async Task<bool> RevokeTokenAsync(RevokeTokenCommand command)
         {
 
-            var user = await _userRepository.GetByRefreshTokenAsync(token);
+            var user = await _userRepository.GetByRefreshTokenAsync(command.Token);
 
             if (user == null)
 
                 return false;
 
-            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+            var refreshToken = user.RefreshTokens.Single(t => t.Token == command.Token);
 
             if (!refreshToken.IsActive)
                 return false;

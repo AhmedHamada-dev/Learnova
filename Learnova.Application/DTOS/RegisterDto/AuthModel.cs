@@ -26,6 +26,5 @@ namespace Learnova.Application.DTOS.RegisterDto
         [JsonIgnore]
         public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpireOn { get; set; }
-        public bool Success { get; set; }
     }
 }

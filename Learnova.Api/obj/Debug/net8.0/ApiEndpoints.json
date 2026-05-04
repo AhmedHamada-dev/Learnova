@@ -33,6 +33,16 @@
   },
   {
     "ContainingType": "Learnova.Api.Controllers.AuthController",
+    "Method": "RefreshToken",
+    "RelativePath": "api/Auth/refresh-token",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Learnova.Api.Controllers.AuthController",
     "Method": "StudentRegister",
     "RelativePath": "api/Auth/register",
     "HttpMethod": "POST",
@@ -58,6 +68,22 @@
       {
         "Name": "command",
         "Type": "Learnova.Application.Command.Authentication.ResetPassword.ResetPasswordCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Learnova.Api.Controllers.AuthController",
+    "Method": "RevokeToken",
+    "RelativePath": "api/Auth/RevokeToken",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "Learnova.Application.Command.Authentication.RevokeToken.RevokeTokenCommand",
         "IsRequired": true
       }
     ],
