@@ -12,7 +12,7 @@ namespace TadaWy.Infrastructure.Seeders
         public static async Task SeedRolesAsync(RoleManager<IdentityRole> RoleManager)
         {
 
-            string[] roles = { "Admin", "Instructor", "Student" };
+            string[] roles = { "Admin", "Instructor", "Student","StudentParent" };
             foreach (var roleName in roles)
             {
                 if (!await RoleManager.RoleExistsAsync(roleName))
