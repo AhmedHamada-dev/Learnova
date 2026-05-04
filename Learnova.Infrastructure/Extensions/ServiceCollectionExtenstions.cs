@@ -3,6 +3,7 @@ using Learnova.Application.IServices;
 using Learnova.Application.Services;
 using Learnova.Domain.Identity;
 using Learnova.Infrastructure.Persistence;
+using Learnova.Infrastructure.Persistence.Repositories;
 using Learnova.Infrastructure.Repositories;
 using Learnova.Infrastructure.Repository;
 using Microsoft.AspNetCore.Identity;
@@ -46,6 +47,8 @@ namespace Learnova.Infrastructure.Extensions
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEmailService,EmailService>();
             services.AddScoped<IEmailVerificationRepository,EmailVerificationRepository>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<ICourseRepository, CourseRepository>();
 
         }
 

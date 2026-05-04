@@ -59,6 +59,22 @@
   },
   {
     "ContainingType": "Learnova.Api.Controllers.AuthController",
+    "Method": "ResendOtp",
+    "RelativePath": "api/Auth/resend-otp",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "Learnova.Application.Command.Authentication.ResendOTP.ResendOTPCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Learnova.Api.Controllers.AuthController",
     "Method": "ResetPassword",
     "RelativePath": "api/Auth/reset-password",
     "HttpMethod": "POST",
@@ -100,6 +116,22 @@
       {
         "Name": "command",
         "Type": "Learnova.Application.Command.Authentication.VerifyEmail.VerifyEmailCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Learnova.API.Controllers.InstructorController",
+    "Method": "CreateCourse",
+    "RelativePath": "api/Instructor/courses",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "Learnova.Application.Command.Courses.CreateCourse.CreateCourseCommand",
         "IsRequired": true
       }
     ],
