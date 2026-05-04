@@ -2,6 +2,7 @@
 using Learnova.Application.Command.Authentication.Login;
 using Learnova.Application.Command.Authentication.RefreshToken;
 using Learnova.Application.Command.Authentication.Register;
+using Learnova.Application.Command.Authentication.ResendOTP;
 using Learnova.Application.Command.Authentication.ResetPassword;
 using Learnova.Application.Command.Authentication.RevokeToken;
 using Learnova.Application.Command.Authentication.VerifyEmail;
@@ -13,6 +14,7 @@ using Learnova.Domain.Entities;
 using Learnova.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -34,13 +36,15 @@ namespace Learnova.Application.Services
         private readonly IAuthRepository _authRepository;
         private readonly IEmailService _emailService;
         private readonly IEmailVerificationRepository _emailVerificationRepository;
-        public AuthService(IOptions<JwtSettings> jwtOptions, IUserRepository userRepository, IAuthRepository authRepository, IEmailService emailService, IEmailVerificationRepository emailVerificationRepository)
+        private readonly ILogger<AuthService> _logger;
+        public AuthService(IOptions<JwtSettings> jwtOptions, IUserRepository userRepository, IAuthRepository authRepository, IEmailService emailService, IEmailVerificationRepository emailVerificationRepository, ILogger<AuthService> logger)
         {
             _Jwt = jwtOptions.Value;
             _userRepository = userRepository;
             _authRepository = authRepository;
             _emailService = emailService;
             _emailVerificationRepository = emailVerificationRepository;
+            _logger = logger;
         }
         public async Task<string> CreateJwtTokenAsync(ApplicationUser applicationUser)
         {
@@ -186,6 +190,8 @@ namespace Learnova.Application.Services
             var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
             if (user is null)
             {
+
+                _logger.LogWarning("VerifyEmail failed: invalid email {Email}", request.Email);
                 authModel.IsAuthenticated = false;
                 authModel.Messege = "Invalid email";
                 return authModel;
@@ -196,6 +202,8 @@ namespace Learnova.Application.Services
 
             if (verification is null)
             {
+
+                _logger.LogWarning("VerifyEmail failed: invalid code for user {UserId}", user.Id);
                 authModel.IsAuthenticated = false;
                 authModel.Messege = "Invalid verification code";
                 return authModel;
@@ -203,12 +211,17 @@ namespace Learnova.Application.Services
 
             if (verification.IsUsed || verification.ExpireAt < DateTime.UtcNow)
             {
+
+                _logger.LogWarning("VerifyEmail failed: expired/used code for user {UserId}", user.Id);
                 authModel.IsAuthenticated = false;
                 authModel.Messege = "Verification code has expired or already used";
                 return authModel;
             }
 
-          
+
+            _logger.LogInformation("VerifyEmail success for user {UserId}", user.Id);
+
+
             verification.IsUsed = true;
             user.IsVerified = true;
 
@@ -242,6 +255,7 @@ namespace Learnova.Application.Services
 
             if (user is null)
             {
+                _logger.LogWarning("Login failed: user with email {Email} not found", request.Email);
                 authModel.IsAuthenticated = false;
                 authModel.Messege = "Invalid email or password";
                 return authModel;
@@ -258,7 +272,9 @@ namespace Learnova.Application.Services
             var passwordValid = await _userRepository.CheckPasswordAsync(user, request.Password);
             if (!passwordValid)
             {
-                // زيادة عداد المحاولات الفاشلة
+
+                _logger.LogWarning("Login failed: invalid password for user {UserId}", user.Id);
+
                 await _userRepository.AccessFailedAsync(user);
 
                 authModel.IsAuthenticated = false;
@@ -271,10 +287,16 @@ namespace Learnova.Application.Services
 
             if (!user.IsVerified)
             {
+                _logger.LogInformation("Login blocked: user {UserId} email not verified", user.Id);
+
                 authModel.IsAuthenticated = false;
                 authModel.Messege = "Account is not verified yet";
                 return authModel;
             }
+
+
+
+            _logger.LogInformation("Login success for user {UserId}", user.Id);
 
             var stringToken = await CreateJwtTokenAsync(user);
 
@@ -336,11 +358,20 @@ namespace Learnova.Application.Services
         {
             var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
             if (user is null)
+            {
+                _logger.LogWarning("ForgetPassword requested for non-existing email {Email}", command.Email);
                 return;
+            }
 
             if (!user.IsVerified)
-                return;
+            {
 
+                _logger.LogInformation("ForgetPassword blocked for unverified user {UserId}", user.Id);
+                return;
+            }
+
+
+           
             var window = TimeSpan.FromMinutes(10);
             var maxCount = 3;
 
@@ -348,7 +379,7 @@ namespace Learnova.Application.Services
             {
                 return;
             }
-
+            _logger.LogInformation("ForgetPassword email sent to user {UserId}", user.Id);
             await _userRepository.UpdateAsync(user, cancellationToken);
 
             var token = await _authRepository.GeneratePasswordResetTokenAsync(user);
@@ -385,6 +416,63 @@ namespace Learnova.Application.Services
 
         }
 
+        public async Task<AuthModel> ResendOtpAsync(ResendOTPCommand command, CancellationToken cancellationToken)
+        {
+            var authModel = new AuthModel();
+
+            var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
+            if (user is null)
+            {
+
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Invalid email";
+                return authModel;
+            }
+
+            if (user.IsVerified)
+            {
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Account is already verified";
+                return authModel;
+            }
+
+            var windowStart = DateTime.UtcNow.AddMinutes(-10);
+            var recentCodesCount = await _emailVerificationRepository
+                .CountUserCodesSinceAsync(user.Id, windowStart, cancellationToken);
+
+            if (recentCodesCount >= 3)
+            {
+
+                _logger.LogWarning("ResendOtp rate limit exceeded for user {UserId}", user.Id);
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Too many OTP requests. Please try again later.";
+                return authModel;
+            }
+
+            var code = GenerateOtpCode(6);
+
+            var verification = new EmailVerification
+            {
+                UserId = user.Id,
+                Code = code,
+                ExpireAt = DateTime.UtcNow.AddMinutes(10),
+                IsUsed = false
+            };
+
+            _logger.LogInformation("ResendOtp sent to user {UserId}", user.Id);
+            await _emailVerificationRepository.AddEmailVerificationToUserAsync(verification, cancellationToken);
+
+            var subject = "Email Verification Code";
+            var body = $"Your new verification code is: <b>{code}</b>";
+
+            await _emailService.SendEmail(user.Email!, subject, body);
+
+            authModel.IsAuthenticated = false;
+            authModel.Email = user.Email;
+            authModel.Messege = "A new verification code has been sent to your email.";
+
+            return authModel;
+        }
         private bool CanSendOtp(ApplicationUser user, int maxCount, TimeSpan window)
         {
             var now = DateTime.UtcNow;

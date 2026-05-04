@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
 using Learnova.Application.Command.Authentication.RefreshToken;
 using Learnova.Application.Command.Authentication.RevokeToken;
+using Learnova.Application.Command.Authentication.ResendOTP;
 
 namespace Learnova.Api.Controllers
 {
@@ -120,6 +121,21 @@ namespace Learnova.Api.Controllers
                 return BadRequest("Token is invalid!");
 
             return Ok();
+        }
+
+        [HttpPost("resend-otp")]
+        public async Task<IActionResult> ResendOtp([FromBody] ResendOTPCommand command,CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+          
+            if (result.Messege == "Too many OTP requests. Please try again later.")
+                return StatusCode(StatusCodes.Status429TooManyRequests, result); 
+
+            return Ok(result);
         }
 
         private void SetRefreshTokenInCookie(string refreshToken, DateTime expires)

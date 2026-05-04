@@ -22,6 +22,12 @@ namespace Learnova.Infrastructure.Repository
             _context= context;
         }
 
+        public async Task<int> CountUserCodesSinceAsync(string userId, DateTime since, CancellationToken cancellationToken)
+        {
+            return await _context.EmailVerifications
+                .Where(v => v.UserId == userId && v.ExpireAt >= since)
+                .CountAsync(cancellationToken);
+        }
         public async Task AddEmailVerificationToUserAsync(EmailVerification verification,CancellationToken cancellationToken)
         {
             _context.EmailVerifications.Add(verification);

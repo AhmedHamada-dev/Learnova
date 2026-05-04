@@ -2,6 +2,7 @@
 using Learnova.Application.Command.Authentication.Login;
 using Learnova.Application.Command.Authentication.RefreshToken;
 using Learnova.Application.Command.Authentication.Register;
+using Learnova.Application.Command.Authentication.ResendOTP;
 using Learnova.Application.Command.Authentication.ResetPassword;
 using Learnova.Application.Command.Authentication.RevokeToken;
 using Learnova.Application.Command.Authentication.VerifyEmail;
@@ -29,12 +30,8 @@ namespace Learnova.Application.IServices
         Task ForgetPasswordAsync(ForgetPasswordCommand command,CancellationToken cancellationToken);
 
         Task<AuthModel> VerifyEmailAsync(VerifyEmailCommand request, CancellationToken cancellationToken);
-       // Task ForgetPasswordAsync(string Email);
 
-        // Task<bool> ResetPasswordAsync(ResetPasswordDTO dto);
-
-        // Task<AuthModel> ChangePasswordAsync(string userId, ChangePasswordDto dto);
-
-        // Task<AuthModel> LoginWithGoogleAsync(string email);
+        Task<AuthModel> ResendOtpAsync(ResendOTPCommand command, CancellationToken cancellationToken);
+      
     }
 }
