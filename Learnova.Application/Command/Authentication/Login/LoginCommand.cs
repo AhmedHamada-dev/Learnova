@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Learnova.Application.Authentication.Command.Login
+namespace Learnova.Application.Command.Authentication.Login
 {
-    public class LoginCommand:IRequest<AuthModel>
+    public class LoginCommand : IRequest<AuthModel>
     {
         public string Email { get; set; }
         public string Password { get; set; }

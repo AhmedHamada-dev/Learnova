@@ -1,4 +1,4 @@
-﻿using Learnova.Application.Authentication.Command.Register;
+﻿using Learnova.Application.Command.Authentication.Register;
 using Learnova.Application.DTOS.RegisterDto;
 using Learnova.Application.IRepository;
 using Learnova.Application.Settings;
@@ -40,5 +40,20 @@ public class AuthRepository : IAuthRepository
     public async Task AddToRoleAsync(ApplicationUser user, string Role)
     {
         await _userManager.AddToRoleAsync(user, Role);
+    }
+
+    public async Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user)
+    {
+       return await _userManager.GeneratePasswordResetTokenAsync(user);
+    }
+
+    public async Task<bool> ResetPasswordAsync(ApplicationUser user,string decodedToken,string NewPassword)
+    {
+        var result = await _userManager.ResetPasswordAsync(
+                user,
+                decodedToken,
+                NewPassword
+            );
+        return result.Succeeded;
     }
 }

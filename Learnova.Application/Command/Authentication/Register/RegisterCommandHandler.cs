@@ -11,21 +11,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Learnova.Application.Authentication.Command.Register
+namespace Learnova.Application.Command.Authentication.Register
 {
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthModel>
     {
-     
+
         private readonly IAuthService _authService;
-       
+
         public RegisterCommandHandler(IAuthService authService)
         {
             _authService = authService;
         }
         public async Task<AuthModel> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-           return await _authService.StudentRegister(request,cancellationToken);
-         
+            return await _authService.StudentRegister(request, cancellationToken);
+
         }
     }
 }

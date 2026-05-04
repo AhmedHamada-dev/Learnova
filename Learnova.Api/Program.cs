@@ -1,4 +1,5 @@
 ﻿using Learnova.Application.Extensions;
+using Learnova.Application.IServices;
 using Learnova.Application.Settings;
 using Learnova.Domain.Identity;
 using Learnova.Infrastructure.Extensions;
@@ -15,7 +16,6 @@ builder.Services.AddControllers();
 // Infrastructure (DbContext + Identity + Repos + AuthService)
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
-
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -1,4 +1,4 @@
-﻿using Learnova.Application.Authentication.Command.Register;
+﻿using Learnova.Application.Command.Authentication.Register;
 using Learnova.Application.DTOS.RegisterDto;
 using Learnova.Application.IRepository;
 using Learnova.Application.IServices;
@@ -10,13 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Learnova.Application.Authentication.Command.Login
+namespace Learnova.Application.Command.Authentication.Login
 {
     public class LoginCommandHandler
     {
         private readonly IAuthService _authService;
 
-        public LoginCommandHandler( IAuthService authService)
+        public LoginCommandHandler(IAuthService authService)
         {
             _authService = authService;
         }

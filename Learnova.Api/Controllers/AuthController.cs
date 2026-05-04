@@ -1,7 +1,8 @@
-﻿using Learnova.Application.Authentication.Command.Login;
-using Learnova.Application.Authentication.Command.Register;
+﻿using Learnova.Application.Command.Authentication.Login;
+using Learnova.Application.Command.Authentication.Register;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Learnova.Api.Controllers
@@ -26,18 +27,18 @@ namespace Learnova.Api.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _mediator.Send(command);
-            if (!result.IsAuthenticated)
-            {
-                return BadRequest(result.Messege);
-            }
 
-            if (!string.IsNullOrEmpty(result.RefreshToken))
-                SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpireOn);
-
-            return Ok(new { token = result.Token, expireOn = result.ExpireOn, Role = result.Role });
+            return Ok(new { email = result.Email, Messege = result.Messege});
         }
 
-        [HttpPost("login")]
+    //      if (!result.IsAuthenticated)
+    //        {
+    //            return BadRequest(result.Messege);
+    //}
+
+    //        if (!string.IsNullOrEmpty(result.RefreshToken))
+    //            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpireOn);
+    [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
