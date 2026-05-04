@@ -17,4 +17,8 @@ public interface IUserRepository
 
     Task<bool> CheckPasswordAsync(ApplicationUser user, string Password);
     Task<ApplicationUser?> GetByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
+
+    Task<bool> IsLockedOutAsync(ApplicationUser user);
+    Task AccessFailedAsync(ApplicationUser user);
+    Task ResetAccessFailedCountAsync(ApplicationUser user);
 }

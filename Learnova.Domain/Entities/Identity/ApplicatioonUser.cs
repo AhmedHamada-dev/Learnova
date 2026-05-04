@@ -25,5 +25,13 @@ namespace Learnova.Domain.Identity
         public ICollection<StudentExam> TakenExams { get; set; } // للـ Student
 
         public ICollection<RefreshToken> RefreshTokens { get; set; }
+
+        public DateTime? LastOtpSentAt { get; set; }
+        public int OtpSendCountInWindow { get; set; }
+        public DateTime? OtpWindowStartedAt { get; set; }
+
+        public DateTime? LastForgetPasswordAt { get; set; }
+        public int ForgetPasswordCountInWindow { get; set; }
+        public DateTime? ForgetPasswordWindowStartedAt { get; set; }
     }
 }

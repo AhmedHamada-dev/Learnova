@@ -71,7 +71,7 @@ namespace Learnova.Application.Services
                 issuer: _Jwt.Issuer,
                 audience: _Jwt.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(_Jwt.DurationInDays),
+                expires: DateTime.UtcNow.AddMinutes(_Jwt.DurationInMinutes),
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -112,7 +112,7 @@ namespace Learnova.Application.Services
             authModel.Role = Roles.ToList();
             authModel.RefreshTokenExpireOn = newRefreshToken.ExpireOn;
             authModel.RefreshTokenExpireOn = newRefreshToken.ExpireOn;
-            authModel.ExpireOn = DateTime.UtcNow.AddDays(_Jwt.DurationInDays);
+            authModel.ExpireOn = DateTime.UtcNow.AddMinutes(_Jwt.DurationInMinutes);
 
             return authModel;
         }
@@ -139,6 +139,22 @@ namespace Learnova.Application.Services
             await _userRepository.AddAsync(user, request.Password, cancellationToken);
 
             await _authRepository.AddToRoleAsync(user, "Student");
+
+            var window = TimeSpan.FromMinutes(10);
+            var maxCount = 3;
+
+            if (!CanSendOtp(user, maxCount, window))
+            {
+                return new AuthModel
+                {
+                    IsAuthenticated = false,
+                    Email = user.Email,
+                    Messege = "Too many OTP requests. Please try again later."
+                };
+            }
+
+            await _userRepository.UpdateAsync(user, cancellationToken);
+
             var code = GenerateOtpCode(6);
 
             var verification = new EmailVerification
@@ -214,31 +230,44 @@ namespace Learnova.Application.Services
             authModel.Token = token;
             authModel.RefreshToken = refreshToken.Token;
             authModel.RefreshTokenExpireOn = refreshToken.ExpireOn;
-            authModel.ExpireOn = DateTime.UtcNow.AddDays(_Jwt.DurationInDays);
+            authModel.ExpireOn = DateTime.UtcNow.AddMinutes(_Jwt.DurationInMinutes);
             authModel.Messege = "Email verified successfully";
 
             return authModel;
         }
         public async Task<AuthModel> Login(LoginCommand request, CancellationToken cancellationToken)
         {
-
             var authModel = new AuthModel();
             var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
-            if (user is null)
-            {
-                authModel.IsAuthenticated = false;
-                authModel.Messege = "No account registered with this email";
-                return authModel;
-            }
 
-            var passwordValid = await _userRepository.CheckPasswordAsync(user, request.Password);
-            if (!passwordValid)
+            if (user is null)
             {
                 authModel.IsAuthenticated = false;
                 authModel.Messege = "Invalid email or password";
                 return authModel;
             }
 
+            // لو الحساب مقفول بسبب محاولات فاشلة
+            if (await _userRepository.IsLockedOutAsync(user))
+            {
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Account is locked. Please try again later.";
+                return authModel;
+            }
+
+            var passwordValid = await _userRepository.CheckPasswordAsync(user, request.Password);
+            if (!passwordValid)
+            {
+                // زيادة عداد المحاولات الفاشلة
+                await _userRepository.AccessFailedAsync(user);
+
+                authModel.IsAuthenticated = false;
+                authModel.Messege = "Invalid email or password";
+                return authModel;
+            }
+
+            // لو الباسورد صح، صفّر عداد الفشل
+            await _userRepository.ResetAccessFailedCountAsync(user);
 
             if (!user.IsVerified)
             {
@@ -262,7 +291,7 @@ namespace Learnova.Application.Services
             authModel.Token = stringToken;
             authModel.RefreshToken = refreshToken.Token;
             authModel.RefreshTokenExpireOn = refreshToken.ExpireOn;
-            authModel.ExpireOn = DateTime.UtcNow.AddDays(_Jwt.DurationInDays);
+            authModel.ExpireOn = DateTime.UtcNow.AddMinutes(_Jwt.DurationInMinutes);
             authModel.Messege = "Login completed successfully";
 
             return authModel;
@@ -307,10 +336,20 @@ namespace Learnova.Application.Services
         {
             var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
             if (user is null)
-                return; 
+                return;
 
             if (!user.IsVerified)
                 return;
+
+            var window = TimeSpan.FromMinutes(10);
+            var maxCount = 3;
+
+            if (!CanSendForgetPassword(user, maxCount, window))
+            {
+                return;
+            }
+
+            await _userRepository.UpdateAsync(user, cancellationToken);
 
             var token = await _authRepository.GeneratePasswordResetTokenAsync(user);
             var encodedToken = WebUtility.UrlEncode(token);
@@ -344,6 +383,47 @@ namespace Learnova.Application.Services
             var random = new Random();
             return random.Next(0, (int)Math.Pow(10, length)).ToString($"D{length}");
 
+        }
+
+        private bool CanSendOtp(ApplicationUser user, int maxCount, TimeSpan window)
+        {
+            var now = DateTime.UtcNow;
+
+            if (user.OtpWindowStartedAt == null || (now - user.OtpWindowStartedAt) > window)
+            {
+                // بداية نافذة جديدة
+                user.OtpWindowStartedAt = now;
+                user.OtpSendCountInWindow = 0;
+            }
+
+            if (user.OtpSendCountInWindow >= maxCount)
+            {
+                return false;
+            }
+
+            user.OtpSendCountInWindow++;
+            user.LastOtpSentAt = now;
+            return true;
+        }
+
+        private bool CanSendForgetPassword(ApplicationUser user, int maxCount, TimeSpan window)
+        {
+            var now = DateTime.UtcNow;
+
+            if (user.ForgetPasswordWindowStartedAt == null || (now - user.ForgetPasswordWindowStartedAt) > window)
+            {
+                user.ForgetPasswordWindowStartedAt = now;
+                user.ForgetPasswordCountInWindow = 0;
+            }
+
+            if (user.ForgetPasswordCountInWindow >= maxCount)
+            {
+                return false;
+            }
+
+            user.ForgetPasswordCountInWindow++;
+            user.LastForgetPasswordAt = now;
+            return true;
         }
     }
 }

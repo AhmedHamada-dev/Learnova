@@ -22,7 +22,22 @@ namespace Learnova.Infrastructure.Extensions
                 obtions.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Lockout.MaxFailedAccessAttempts = 5;     
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); 
+                options.Lockout.AllowedForNewUsers = true;
+            });
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = true; 
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+
+                options.User.RequireUniqueEmail = true;
+            })
             .AddEntityFrameworkStores<LearnovaDbContext>()
             .AddDefaultTokenProviders();
             services.AddHttpClient();

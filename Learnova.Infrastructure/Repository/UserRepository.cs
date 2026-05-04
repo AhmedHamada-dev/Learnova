@@ -58,6 +58,13 @@ public class UserRepository : IUserRepository
         return await _userManager.CheckPasswordAsync(user, Password);
     }
 
-   
+    public Task<bool> IsLockedOutAsync(ApplicationUser user)
+     => _userManager.IsLockedOutAsync(user);
+
+    public Task AccessFailedAsync(ApplicationUser user)
+        => _userManager.AccessFailedAsync(user);
+
+    public Task ResetAccessFailedCountAsync(ApplicationUser user)
+        => _userManager.ResetAccessFailedCountAsync(user);
 
 }
